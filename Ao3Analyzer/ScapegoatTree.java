@@ -60,6 +60,9 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
         return null;
     }
 
+    // Given a key, deletes its corresponding node and value from the table
+    // Prints an error if the key is not in the table 
+    // The comparator is used to compare keys
     public void delete(Key key, Comparator<Key> comparator){
         // To do
         System.out.println("Not implemented yet");
