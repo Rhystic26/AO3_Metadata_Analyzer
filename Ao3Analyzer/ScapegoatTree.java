@@ -3,6 +3,11 @@ package Ao3Analyzer;
 import java.io.*;
 import java.util.*;
 
+/*
+Notes from Katie:
+    - How can we structure the application to take advantage of the scapegoat tree's extremely fast search times?
+*/
+
 public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
 	
 	private Node root;
