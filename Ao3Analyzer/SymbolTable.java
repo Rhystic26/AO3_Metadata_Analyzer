@@ -20,5 +20,11 @@ public interface SymbolTable<Key, Value>{
 	// "Search operation" 
 	public abstract Value get(Key key, Comparator<Key> comparator);
 
+	// Returns true or false if the given key is/is not in the table
+	public abstract boolean contains(Key key, Comparator<Key> comparator);
+
+	// Given a key, deletes its corresponding node and value from the table
+    // Prints an error if the key is not in the table 
+    // The comparator is used to compare keys
 	public abstract void delete(Key key, Comparator<Key> comparator);
 }
