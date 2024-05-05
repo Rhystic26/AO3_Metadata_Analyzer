@@ -61,9 +61,26 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
     // The comparator is used to compare keys
     // "Search operation" 
     public Value get(Key key, Comparator<Key> comparator){
-        // To do
-        return null;
+		// it's like the regular BST
+        return getHelper(root, key, comparator);
     }
+
+	private Value getHelper(Node current, Key key, Comparator comparator) {
+		// base case: search miss
+		if (current == null) return null;
+
+		// now compare
+		int c = comparator.compare(key, current.key);
+
+		// check if search hit, otherwise recurse
+		if (c == 0) return current.val;
+		// go left
+		else if (c < 0) return getHelper(current.left, key, comparator);
+		// go right
+		else if (c > 0) return getHelper(current.right, key, comparator);
+		// if we get out here there is a problem
+		throw new RuntimeException("comparator is throwing null??");
+	}
 
     // Returns true or false if the given key is/is not in the table
     public boolean contains(Key key, Comparator<Key> comparator){
