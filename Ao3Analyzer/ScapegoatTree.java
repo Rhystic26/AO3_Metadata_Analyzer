@@ -84,8 +84,8 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
 
     // Returns true or false if the given key is/is not in the table
     public boolean contains(Key key, Comparator<Key> comparator){
-        // To do
-        return false;
+		// this can just be get but checking nullness
+        return get(key, comparator) != null;
     }
 
     // Given a key, deletes its corresponding node and value from the table
