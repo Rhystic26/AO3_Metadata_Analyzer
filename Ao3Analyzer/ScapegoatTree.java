@@ -27,14 +27,16 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
         private Node right;
         private int size;
         private boolean isScapegoat;
+		private int depth;
 
-        private Node(Key key, Value val, Node left, Node right, int size, boolean isScapegoat){
+        private Node(Key key, Value val, Node left, Node right, int size, int depth){
             this.key = key;
             this.val = val;
             this.left = left;
             this.right = right;
             this.size = size;
-            this.isScapegoat = isScapegoat;
+            this.isScapegoat = false;
+			this.depth = depth;
         } 
     }
 
