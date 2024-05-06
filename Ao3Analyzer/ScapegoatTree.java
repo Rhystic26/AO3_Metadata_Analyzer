@@ -14,6 +14,7 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
 	private int size;
     private int maxSize;	// what is this for?? -alex
     private Node scapegoat;
+	private float alpha = 0.75;	//TODO: determine if we want to allow assignment of alpha
 
 	public ScapegoatTree(){
 		this.size = 0;
