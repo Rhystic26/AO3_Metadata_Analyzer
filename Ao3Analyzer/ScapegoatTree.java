@@ -12,7 +12,7 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
 	
 	private Node root;
 	private int size;
-    private int maxSize;
+    private int maxSize;	// what is this for?? -alex
     private Node scapegoat;
 
 	public ScapegoatTree(){
@@ -40,33 +40,36 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
         } 
     }
 
+	// super simple
     public boolean isEmpty(){
-        // To do
-        return false;
+        return size == 0;
     }
 
     // Returns the number of keys 
     public int size(){
-        // To do
+        // TODO
         return 0;
     }
 
     // Puts the key-value pair into the table 
     // The comparator is used to compare keys
     public void put(Key key, Value val, Comparator<Key> comparator){
-        // To do
+        // TODO
         System.out.println("Not implemented yet");
     } 
 
-    // Returns the value paired with the key 
-    // Returns null if the key is not in the table
-    // The comparator is used to compare keys
-    // "Search operation" 
+    /* 
+	 * Returns the value paired with the key 
+     * Returns null if the key is not in the table
+	 * The comparator is used to compare keys
+	 * Essentially a "Search operation" 
+	 */
     public Value get(Key key, Comparator<Key> comparator){
 		// it's like the regular BST
         return getHelper(root, key, comparator);
     }
 
+	// me when recursion
 	private Value getHelper(Node current, Key key, Comparator comparator) {
 		// base case: search miss
 		if (current == null) return null;
@@ -90,11 +93,13 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
         return get(key, comparator) != null;
     }
 
-    // Given a key, deletes its corresponding node and value from the table
-    // Prints an error if the key is not in the table 
-    // The comparator is used to compare keys
+    /* 
+	 * Given a key, deletes its corresponding node and value from the table
+	 * Prints an error if the key is not in the table 
+	 * The comparator is used to compare keys
+	 */
     public void delete(Key key, Comparator<Key> comparator){
-        // To do
+        // TODO
         System.out.println("Not implemented yet");
     }
 
