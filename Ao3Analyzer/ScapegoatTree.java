@@ -27,28 +27,25 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
         private Node right;
         private int size;
         private boolean isScapegoat;
-		private int depth;
 
-        private Node(Key key, Value val, Node left, Node right, int size, int depth){
+        private Node(Key key, Value val, Node left, Node right){
             this.key = key;
             this.val = val;
             this.left = left;
             this.right = right;
-            this.size = size;
+            this.size = 1;
             this.isScapegoat = false;
-			this.depth = depth;
         } 
     }
 
 	// super simple
     public boolean isEmpty(){
-        return size == 0;
+        return this.size == 0;
     }
 
-    // Returns the number of keys 
+	// don't know why we need this but ok
     public int size(){
-        // TODO
-        return 0;
+        return this.size;
     }
 
     // Puts the key-value pair into the table 
