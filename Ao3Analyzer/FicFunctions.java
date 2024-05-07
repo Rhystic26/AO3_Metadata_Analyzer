@@ -38,7 +38,7 @@ public class FicFunctions {
 		private String[] allKudos;
 		private String[] allBookmarks;
 	}
-	public void main(Str[] args) {
+	public static void main(String[] args) {
 	
 	}
 }
