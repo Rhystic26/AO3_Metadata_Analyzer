@@ -14,9 +14,11 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
 	private int size;
     private int maxSize;	// what is this for?? -alex
     private Node scapegoat;
+    private int alpha; // Must be between 0.5 and 1
 
-	public ScapegoatTree(){
+	public ScapegoatTree(int alpha){
 		this.size = 0;
+        this.alpha = alpha;
 	}
 
 	private class Node{
@@ -55,9 +57,45 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
     // The comparator is used to compare keys
     public void put(Key key, Value val, Comparator<Key> comparator){
         // TODO
-        System.out.println("Not implemented yet");
-    } 
+        int depthCounter = 0;
+        root = putHelper(key, val, comparator, root, depthCounter);
+    }
 
+    public Node putHelper (Key key, Value val, Comparator<Key> comparator, Node r, int depthCounter){
+        // Change to self-balance
+        if(r == null){
+            r = new Node(key, val, null, null, 1, depthCounter);
+            this.size += 1;
+            if(checkHeightBalance() == false){
+                rebalance(r);
+            }
+            return r;
+        }
+
+        if(comparator.compare(key, r.key) == 0){
+            r = new Node(key, val, r.left, r.right, 1, depthCounter);
+            return r;
+        }
+
+        if(comparator.compare(key, r.key) < 0){
+            r.left = putHelper(key, val, comparator, r.left, depthCounter+1);
+        }
+        
+        if(comparator.compare(key, r.key) > 0){
+            r.right = putHelper(key, val, comparator, r.right, depthCounter+1);
+        }
+
+        return r;
+    }
+
+    public void rebalance(Node insertedNode){
+        // TODO
+    }
+
+    public boolean checkHeightBalance(){
+        // TODO
+        return null;
+    }
     /* 
 	 * Returns the value paired with the key 
      * Returns null if the key is not in the table
