@@ -66,14 +66,12 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
     // Puts the key-value pair into the table 
     // The comparator is used to compare keys
     public void put(Key key, Value val, Comparator<Key> comparator){
-        // TODO
         int depthCounter = 0;
         root = putHelper(key, val, comparator, root, depthCounter);
     }
 
     public Node putHelper (Key key, Value val, Comparator<Key> comparator, Node r, int depthCounter){
-        // Change to self-balance
-
+        // Inserts the key-value pair into a new node if a node in the correct insertion position does not exist
         if(r == null){
             r = new Node(key, val, null, null, 1, depthCounter);
             this.size += 1;
@@ -85,20 +83,25 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
             return r;
         }
 
+        // Overwrites existing node value with new value if input key matches the key of an existing node
         if(comparator.compare(key, r.key) == 0){
             r = new Node(key, val, r.left, r.right, 1, depthCounter);
             return r;
         }
 
+        // Recurses down left subtree
         if(comparator.compare(key, r.key) < 0){
             r.left = putHelper(key, val, comparator, r.left, depthCounter+1);
         }
         
+        // Recurses down right subtree
         if(comparator.compare(key, r.key) > 0){
             r.right = putHelper(key, val, comparator, r.right, depthCounter+1);
         }
 
+        // Checks to see if tree is alpha-height-balanced
         if(checkHeightBalance(this.root) == false){
+            // Checks to see if the current node is eligible to be a scapegoat; if true, rebalances tree
             if(checkWeightBalance(r) == false){
                 r.isScapegoat = true;
                 rebalance(r, comparator, depthCounter);
@@ -108,16 +111,19 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
         return r;
     }
 
+    // Checks to see if a subtree originating from a given node is a-weight-balanced
     public boolean checkWeightBalance(Node r){
         return(weightBalanceSize(r.left) <= (this.alpha*weightBalanceSize(r)) && weightBalanceSize(r.right) <= (this.alpha*weightBalanceSize(r)));
     }
 
+    // Finds the size of a subtree originating from a given node
     public int weightBalanceSize(Node r){
 		return (r == null) ? 0 : weightBalanceSize(r.left) + weightBalanceSize(r.right) + 1;
     }
 
+    // Rebalances tree using scapegoat node selected in put function as root
     public void rebalance(Node r, Comparator<Key> comparator, int depthCounter){
-        // TODO
+        // Makes a pseudo-hashtable of all key-value pairs in the scapegoat's subtree, sorted by key values
         ArrayList<Key> unsortedKeys = new ArrayList<Key>();
         ArrayList<Value> unsortedValues = new ArrayList<Value>();
         rebalanceTraversal(unsortedKeys, unsortedValues, r);
@@ -128,10 +134,12 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
         for(int i=0; i<unsortedValues.size(); i++){
             sortedValues.add((sortedKeys.indexOf(unsortedKeys.get(i))), unsortedValues.get(i));
         }
-
+        // Deletes all nodes in the subtree (including the scapegoat) and replaces the scapegoat with the median key-value pair from the initial subtree
         rebalanceTraversalDelete(r);
         int medianIndex = sortedKeys.size()/2;
         r = new Node(sortedKeys.get(medianIndex), sortedValues.get(medianIndex), null, null, 1, depthCounter);
+        
+        // Inserts remaining key-value pairs into subtree in balanced order
         for(int i=0; i<sortedKeys.size(); i++){
             rebalancePut(r, sortedKeys.get(i), sortedValues.get(i), comparator, depthCounter);
         }
