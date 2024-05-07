@@ -2,6 +2,7 @@ package Ao3Analyzer;
 
 import java.io.*;
 import java.util.*;
+import java.lang.Math;
 
 /*
 Notes from Katie:
@@ -101,28 +102,11 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
         if(r.rebalancing){
             if(checkWeightBalance(r) == false){
                 r.isScapegoat = true;
-                rebalance(r);
+                rebalance(r, comparator, depthCounter);
             }
         }
 
         return r;
-    }
-
-    public void rebalance(Node insertedNode){
-        // TODO
-    }
-
-    public boolean checkHeightBalance(Node root){
-        // DONE!
-        if(root == null){
-            return true;
-        }
-
-        if(Math.abs(root.left.depth-root.right.depth) <= 1 && checkHeightBalance(root.left) && checkHeightBalance(root.right)){
-            return true;
-        }
-
-        return false;
     }
 
     public boolean checkWeightBalance(Node r){
@@ -130,11 +114,110 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
             return true;
         }
 
-        if(){
+        if(code){
             return true;
         }
 
         return false;
+    }
+
+    public void rebalance(Node r, Comparator<Key> comparator, int depthCounter){
+        // TODO
+        ArrayList<Key> unsortedKeys = new ArrayList<Key>();
+        ArrayList<Value> unsortedValues = new ArrayList<Value>();
+        rebalanceTraversal(unsortedKeys, unsortedValues, r);
+        ArrayList<Key> sortedKeys = new ArrayList<Key>(unsortedKeys);
+        sortedKeys.sort(comparator);
+        ArrayList<Value> sortedValues = new ArrayList<Value>();
+       
+        for(int i=0; i<unsortedValues.size(); i++){
+            sortedValues.add((sortedKeys.indexOf(unsortedKeys.get(i))), unsortedValues.get(i));
+        }
+
+        rebalanceTraversalDelete(r);
+        int medianIndex = sortedKeys.size()/2;
+        r = new Node(sortedKeys.get(medianIndex), sortedValues.get(medianIndex), null, null, 1, depthCounter);
+        for(int i=0; i<sortedKeys.size(); i++){
+            rebalancePut(r, sortedKeys.get(i), sortedValues.get(i), comparator, depthCounter);
+        }
+    }
+
+    public void rebalanceTraversal(ArrayList<Key> unsortedKeys, ArrayList<Value> unsortedValues, Node currentNode){
+        if(currentNode == null){
+            return;
+        }
+
+        rebalanceTraversal(unsortedKeys, unsortedValues, currentNode.left);
+        unsortedKeys.add(currentNode.key);
+        unsortedValues.add(currentNode.val);
+        rebalanceTraversal(unsortedKeys, unsortedValues, currentNode.right);
+    }
+
+    public void rebalanceTraversalDelete(Node currentNode){
+        if(currentNode == null){
+            return;
+        }
+        Node l = currentNode.left;
+        Node r = currentNode.right;
+        rebalanceTraversalDelete(l);
+        currentNode = null;
+        rebalanceTraversalDelete(r);
+    }
+
+
+    public void rebalancePut(Node r, Key key, Value val, Comparator<Key> comparator, int depthCounter){
+        r = rebalancePutHelper(r, key, val, comparator, depthCounter);
+    }
+
+    public Node rebalancePutHelper(Node r, Key key, Value val, Comparator<Key> comparator, int depthCounter){
+        // TODO
+        r.rebalancing = false;
+
+        if(r == null){
+            r = new Node(key, val, null, null, 1, depthCounter);
+            this.size += 1;
+          
+            if(depthCounter > maxDepth){
+                this.maxDepth = depthCounter;
+            }
+
+            return r;
+        }
+
+        if(comparator.compare(key, r.key) == 0){
+            r = new Node(key, val, r.left, r.right, 1, depthCounter);
+            return r;
+        }
+
+        if(comparator.compare(key, r.key) < 0){
+            r.left = putHelper(key, val, comparator, r.left, depthCounter+1);
+        }
+        
+        if(comparator.compare(key, r.key) > 0){
+            r.right = putHelper(key, val, comparator, r.right, depthCounter+1);
+        }
+
+        return r;
+    }
+
+    public boolean checkHeightBalance(Node root){
+        // DONE!
+        /*if(root == null){
+            return true;
+        }
+
+        if(Math.abs(root.left.depth-root.right.depth) <= 1 && checkHeightBalance(root.left) && checkHeightBalance(root.right)){
+            return true;
+        }
+
+        return false;*/
+        double treeSizeLog = Math.log(this.size)/Math.log(1/this.alpha);
+        return(maxDepth <= Math.floor(treeSizeLog));
+    }
+
+    public double floorOops(double f){
+        // TODO
+        return 1.0;
     }
 
     /* 
