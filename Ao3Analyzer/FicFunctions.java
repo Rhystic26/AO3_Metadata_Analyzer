@@ -15,6 +15,7 @@ public class FicFunctions {
 			this.day = day;
 		}
 	}
+
 	private class Fic{
 		private int id;
 		private String title;
@@ -38,7 +39,11 @@ public class FicFunctions {
 		private String[] allKudos;
 		private String[] allBookmarks;
 	}
+
 	public void main(Str[] args) {
-	
+		boolean running = true;
+		while (running) {
+			System.out.println("");
+		}
 	}
 }
