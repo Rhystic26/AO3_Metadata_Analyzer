@@ -173,8 +173,6 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
     }
 
     public Node rebalancePutHelper(Node r, Key key, Value val, Comparator<Key> comparator, int depthCounter){
-        // TODO
-
         if(r == null){
             r = new Node(key, val, null, null, 1, depthCounter);
             this.size += 1;
