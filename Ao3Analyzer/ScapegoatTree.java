@@ -8,6 +8,13 @@ import java.lang.Math;
 Notes from Katie:
     - How can we structure the application to take advantage of the scapegoat tree's extremely fast search times?
 */
+class IntComparator implements Comparator<Integer>{
+    public int compare(Integer n1, Integer n2){
+        if(n1 > n2) return 1;
+        if(n1 < n2) return -1;
+        return 0;
+    }
+}
 
 public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
 	
@@ -15,10 +22,10 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
 	private int size;
     private int maxSize;	// what is this for?? -alex
     private Node scapegoat;
-    private int alpha; // Must be between 0.5 and 1
+    private double alpha; // Must be between 0.5 and 1
     private int maxDepth;
 
-	public ScapegoatTree(int alpha){
+	public ScapegoatTree(double alpha){
 		this.size = 0;
         this.alpha = alpha;
         this.maxSize = 0;
@@ -34,7 +41,6 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
         private int size;
         private boolean isScapegoat;
 		private int depth;
-        private boolean rebalancing;
 
         private Node(Key key, Value val, Node left, Node right, int size, int depth){
             this.key = key;
@@ -44,7 +50,6 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
             this.size = size;
             this.isScapegoat = false;
 			this.depth = depth;
-            this.rebalancing = false;
         } 
     }
 
@@ -69,7 +74,6 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
 
     public Node putHelper (Key key, Value val, Comparator<Key> comparator, Node r, int depthCounter){
         // Change to self-balance
-        r.rebalancing = false;
 
         if(r == null){
             r = new Node(key, val, null, null, 1, depthCounter);
@@ -77,10 +81,6 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
           
             if(depthCounter > maxDepth){
                 this.maxDepth = depthCounter;
-            }
-
-            if(checkHeightBalance(this.root) == false){
-                r.rebalancing = true;
             }
 
             return r;
@@ -99,7 +99,7 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
             r.right = putHelper(key, val, comparator, r.right, depthCounter+1);
         }
 
-        if(r.rebalancing){
+        if(checkHeightBalance(this.root) == false){
             if(checkWeightBalance(r) == false){
                 r.isScapegoat = true;
                 rebalance(r, comparator, depthCounter);
@@ -110,15 +110,15 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
     }
 
     public boolean checkWeightBalance(Node r){
+        return(weightBalanceSize(r.left) <= (this.alpha*weightBalanceSize(r)) && weightBalanceSize(r.right) <= (this.alpha*weightBalanceSize(r)));
+    }
+
+    public int weightBalanceSize(Node r){
         if(r == null){
-            return true;
+            return 0;
         }
 
-        if(code){
-            return true;
-        }
-
-        return false;
+        return weightBalanceSize(r.left) + weightBalanceSize(r.right) + 1;
     }
 
     public void rebalance(Node r, Comparator<Key> comparator, int depthCounter){
@@ -171,7 +171,6 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
 
     public Node rebalancePutHelper(Node r, Key key, Value val, Comparator<Key> comparator, int depthCounter){
         // TODO
-        r.rebalancing = false;
 
         if(r == null){
             r = new Node(key, val, null, null, 1, depthCounter);
@@ -265,7 +264,33 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
         System.out.println("Not implemented yet");
     }
 
+    public ArrayList<Key> inOrderTraversalKeys(){
+        ArrayList<Key> keys = new ArrayList<Key>();
+        inOrderTraversalKeysHelper(keys, this.root);
+        return keys;
+    }
+
+    public void inOrderTraversalKeysHelper(ArrayList<Key> keys, Node currentNode){
+        if(currentNode == null){
+            return;
+        }
+        inOrderTraversalKeysHelper(keys, currentNode.left);
+        keys.add(currentNode.key);
+        inOrderTraversalKeysHelper(keys, currentNode.right);
+    }
+
     public static void main(String[] args) {
+        ScapegoatTree<Integer, String> sgt = new ScapegoatTree<Integer, String>(0.5);
+        IntComparator ic = new IntComparator();
+        sgt.put(4, "d", ic);
+        sgt.put(1, "a", ic);
+        sgt.put(5, "e", ic);
+        sgt.put(2, "b", ic);
+        ArrayList<Integer> k1 = sgt.inOrderTraversalKeys();
+        System.out.println(k1.toString());   
+        sgt.put(3, "c", ic);
+        ArrayList<Integer> k2 = sgt.inOrderTraversalKeys();
+        System.out.println(k2.toString()); 
 
     }
 }
