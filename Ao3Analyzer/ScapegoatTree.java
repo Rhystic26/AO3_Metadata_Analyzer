@@ -266,9 +266,8 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
     }
 
     public void inOrderTraversalKeysHelper(ArrayList<Key> keys, Node currentNode){
-        if(currentNode == null){
-            return;
-        }
+        if(currentNode == null) return;
+
         inOrderTraversalKeysHelper(keys, currentNode.left);
         keys.add(currentNode.key);
         inOrderTraversalKeysHelper(keys, currentNode.right);
