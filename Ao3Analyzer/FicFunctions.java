@@ -64,9 +64,15 @@ public class FicFunctions {
 		}
 	}
 
-	private String getNormal(Queue<Character> c) {}
-	private String getString(Queue<Character> c) {}
-	private String getCSArray(Queue<Character> c) {}
+	private String getNormal(Queue<Character> c) {
+		return null;
+	}
+	private String getString(Queue<Character> c) {
+		return null;
+	}
+	private String getCSArray(Queue<Character> c) {
+		return null;
+	}
 
 	private void ingest(String filename) {
 		try {
