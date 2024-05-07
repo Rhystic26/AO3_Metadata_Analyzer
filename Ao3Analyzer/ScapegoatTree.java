@@ -15,10 +15,13 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
     private int maxSize;	// what is this for?? -alex
     private Node scapegoat;
     private int alpha; // Must be between 0.5 and 1
+    private int maxDepth;
 
 	public ScapegoatTree(int alpha){
 		this.size = 0;
         this.alpha = alpha;
+        this.maxSize = 0;
+        this.maxDepth = 0;
 	}
 
 	private class Node{
@@ -30,6 +33,7 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
         private int size;
         private boolean isScapegoat;
 		private int depth;
+        private boolean rebalancing;
 
         private Node(Key key, Value val, Node left, Node right, int size, int depth){
             this.key = key;
@@ -39,6 +43,7 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
             this.size = size;
             this.isScapegoat = false;
 			this.depth = depth;
+            this.rebalancing = false;
         } 
     }
 
@@ -63,12 +68,20 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
 
     public Node putHelper (Key key, Value val, Comparator<Key> comparator, Node r, int depthCounter){
         // Change to self-balance
+        r.rebalancing = false;
+
         if(r == null){
             r = new Node(key, val, null, null, 1, depthCounter);
             this.size += 1;
-            if(checkHeightBalance() == false){
-                rebalance(r);
+          
+            if(depthCounter > maxDepth){
+                this.maxDepth = depthCounter;
             }
+
+            if(checkHeightBalance(this.root) == false){
+                r.rebalancing = true;
+            }
+
             return r;
         }
 
@@ -85,6 +98,13 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
             r.right = putHelper(key, val, comparator, r.right, depthCounter+1);
         }
 
+        if(r.rebalancing){
+            if(checkWeightBalance(r) == false){
+                r.isScapegoat = true;
+                rebalance(r);
+            }
+        }
+
         return r;
     }
 
@@ -92,10 +112,31 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
         // TODO
     }
 
-    public boolean checkHeightBalance(){
-        // TODO
-        return null;
+    public boolean checkHeightBalance(Node root){
+        // DONE!
+        if(root == null){
+            return true;
+        }
+
+        if(Math.abs(root.left.depth-root.right.depth) <= 1 && checkHeightBalance(root.left) && checkHeightBalance(root.right)){
+            return true;
+        }
+
+        return false;
     }
+
+    public boolean checkWeightBalance(Node r){
+        if(r == null){
+            return true;
+        }
+
+        if(){
+            return true;
+        }
+
+        return false;
+    }
+
     /* 
 	 * Returns the value paired with the key 
      * Returns null if the key is not in the table
