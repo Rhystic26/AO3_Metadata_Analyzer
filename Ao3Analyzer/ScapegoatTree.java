@@ -125,9 +125,7 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
         sortedKeys.sort(comparator);
         ArrayList<Value> sortedValues = new ArrayList<Value>();
        
-        for(int i=0; i<unsortedValues.size(); i++){
-            sortedValues.add((sortedKeys.indexOf(unsortedKeys.get(i))), unsortedValues.get(i));
-        }
+		for (Value v : unsortedValues) { sortedValues.add(sortedKeys.indexOf(v), v); }
 
         rebalanceTraversalDelete(r);
         int medianIndex = sortedKeys.size()/2;
@@ -165,11 +163,9 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
     }
 
     public Node rebalancePutHelper(Node r, Key key, Value val, Comparator<Key> comparator, int depthCounter){
-        // TODO
-
         if(r == null){
             r = new Node(key, val, null, null, 1, depthCounter);
-            this.size += 1;
+            this.size++;
           
             if(depthCounter > maxDepth){
                 this.maxDepth = depthCounter;
@@ -178,19 +174,11 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
             return r;
         }
 
-        if(comparator.compare(key, r.key) == 0){
-            r = new Node(key, val, r.left, r.right, 1, depthCounter);
-            return r;
-        }
-
-        if(comparator.compare(key, r.key) < 0){
-            r.left = putHelper(key, val, comparator, r.left, depthCounter+1);
-        }
-        
-        if(comparator.compare(key, r.key) > 0){
-            r.right = putHelper(key, val, comparator, r.right, depthCounter+1);
-        }
-
+		int c = comparator.compare(key, r.key);
+		if (c == 0) return r;
+		else r.left = (c < 0) ?
+				putHelper(key, val, comparator, r.left, depthCounter+1):
+				putHelper(key, val, comparator, r.right, depthCounter+1);
         return r;
     }
 
