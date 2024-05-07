@@ -20,7 +20,7 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
 	
 	private Node root;
 	private int size;
-    private int maxSize;	// what is this for?? -alex
+    private int maxSize;
     private Node scapegoat;
     private double alpha; // Must be between 0.5 and 1
     private int maxDepth;
@@ -41,19 +41,15 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
         private int size;
         private boolean isScapegoat;
 
-        private Node(Key key, Value val){
+        private Node(Key key, Value val, Node left, Node right, int size, int depth){
             this.key = key;
             this.val = val;
-            this.left = null;
-            this.right = null;
-            this.size = 1;
+            this.left = left;
+            this.right = right;
+            this.size = size;
             this.isScapegoat = false;
+			this.depth = depth;
         } 
-
-		// checking scapegoatedness is useful
-		private boolean checkScapegoatedness() {
-			int leftsize = this.left == null ? 0: left.size;
-		}
     }
 
 	// super simple
@@ -116,11 +112,7 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
     }
 
     public int weightBalanceSize(Node r){
-        if(r == null){
-            return 0;
-        }
-
-        return weightBalanceSize(r.left) + weightBalanceSize(r.right) + 1;
+		return (r == null) ? 0 : weightBalanceSize(r.left) + weightBalanceSize(r.right) + 1;
     }
 
     public void rebalance(Node r, Comparator<Key> comparator, int depthCounter){
