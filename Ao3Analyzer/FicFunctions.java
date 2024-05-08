@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.*;
 
 public class FicFunctions {
-	public static ScapegoatTree tree;
+	public static ScapegoatTree<Integer, Fic> tree = new ScapegoatTree<Integer, Fic>(0.75);
 
 	private class Date {
 		public int year;
@@ -179,32 +179,7 @@ public class FicFunctions {
 				f.allBookmarks = temp.remove().split(",");
 				//System.out.println("allBookmarks: " + f.allBookmarks);
 				// now add f to the tree
-				/*
-				Queue<String> lineQueue = new LinkedList<String>(Arrays.asList(currentline.split(",")));
-
-				// the easiest one is the first one
-				f.id = Integer.parseInt(lineQueue.remove());
-				// it gets weird now
-				// if a field has multiple entires, it's wrapped in ""
-				// therefore, we make a new array broken at " and not commas
-				String[] lineQuotes = currentline.split("\"");
-				Queue<String> lineQuotesQueue = new LinkedList<String>(Arrays.asList(currentLine.split("\"")));
-				// now check if the expected title entry begins with a "
-				// assign based on that or something
-				f.title = (lineQueue.peek().charAt(0) == "\"") ?
-						lineQuotesQueue.remove():
-						lineQueue.remove();
-
-				// maybe characterwise scanning is better
-				*/
-				// and now the fun logic begins
-				/*
-				while (!strq.isEmpty()) {
-					String currItem = strq.remove();
-					// if not in an array, quite simple
-					if ()
-				}
-				*/
+				tree.put(f.id, f, new IDComparator());
 			}
 		} catch(FileNotFoundException e) {
 			System.err.println("File not found: " + e.getMessage());
@@ -215,5 +190,11 @@ public class FicFunctions {
 		FicFunctions f = new FicFunctions();
 		System.out.println("Enter a fic to search for: ");
 		f.ingest("fanfics.csv");
+	}
+}
+
+class IDComparator implements Comparator<Integer> {
+	public int compare(Integer int1, Integer int2) {
+		return int1 - int2;
 	}
 }
