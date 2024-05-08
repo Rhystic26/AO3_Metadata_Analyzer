@@ -10,9 +10,7 @@ Notes from Katie:
 */
 class IntComparator implements Comparator<Integer>{
     public int compare(Integer n1, Integer n2){
-        if(n1 > n2) return 1;
-        if(n1 < n2) return -1;
-        return 0;
+		return n1 - n2;
     }
 }
 
@@ -100,13 +98,13 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
         }
 
         // Checks to see if tree is alpha-height-balanced
-        if(checkHeightBalance(this.root) == false){
+        /*if(checkHeightBalance(this.root) == false){
             // Checks to see if the current node is eligible to be a scapegoat; if true, rebalances tree
             if(checkWeightBalance(r) == false){
                 r.isScapegoat = true;
                 rebalance(r, comparator, depthCounter);
             }
-        }
+        }*/
 
         return r;
     }

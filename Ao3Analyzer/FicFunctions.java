@@ -118,7 +118,7 @@ public class FicFunctions {
 			scanner.nextLine();
 			// now ingest
 			while (scanner.hasNextLine()) {
-					System.out.println("ingesting new line");
+					//System.out.println("ingesting new line");
 				// assign a new variable for accumulation purposes
 				Fic f = new Fic();
 				String currentline = scanner.nextLine();
@@ -132,14 +132,14 @@ public class FicFunctions {
 				String cat = "";
 				while (!linecharsqueue.isEmpty()) {
 					Character currentChar = linecharsqueue.peek();
-					System.out.println(currentChar);
+					//System.out.println(currentChar);
 					if (currentChar == '\"') temp.add(getString(linecharsqueue));
 					else if (currentChar == '[') temp.add(getCSArray(linecharsqueue));
 					else temp.add(getNormal(linecharsqueue));
 				}
 				// now depopulate queue into f
 				f.id = Integer.parseInt(temp.remove());
-				System.out.println("id: " + f.id);
+				//System.out.println("id: " + f.id);
 				f.title = temp.remove();
 				//System.out.println("title: " + f.title);
 				f.author = temp.remove().split(",");
@@ -179,7 +179,7 @@ public class FicFunctions {
 				f.allKudos = temp.remove().split(",");
 				//System.out.println("allKudos: " + f.allKudos);
 				f.allBookmarks = temp.remove().split(",");
-				System.out.println("allBookmarks: " + f.allBookmarks);
+				//System.out.println("allBookmarks: " + f.allBookmarks);
 				// now add f to the tree
 				tree.put(f.id, f, new IDComparator());
 			}
@@ -197,9 +197,17 @@ public class FicFunctions {
 		Scanner in = new Scanner(System.in);
 		IDComparator comp = new IDComparator();
 
+		while (true) {
 		System.out.println("Enter a fic to search for: ");
 		String input = in.nextLine();
-		//System.out.println(f.tree.get(new Integer(Integer.parseInt(input)), comp));
+		Fic searchFor = f.tree.get(new Integer(Integer.parseInt(input)), comp);
+		if (searchFor != null) {
+			System.out.println("title: " + searchFor.title);
+			System.out.println("author(s): " + Arrays.toString(searchFor.author));
+			System.out.println("views: " + searchFor.hits);
+		}
+		else System.out.println("not a valid id >:/");
+		}
 	}
 }
 
