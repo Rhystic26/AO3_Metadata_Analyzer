@@ -33,7 +33,7 @@ public class FicFunctions {
 		private String status;
 		private String statusDate;
 		private Integer words;
-		private Integer chapters;
+		private String chapters;
 		private Integer comments;
 		private Integer kudos;
 		private Integer bookmarks;
@@ -66,10 +66,12 @@ public class FicFunctions {
 		}
 	}
 
+	// helper functions
 	private String getNormal(Queue<Character> c) {
 		String cat = "";
 		while (c.peek() != ',') cat += c.remove();
 		c.remove();
+		//System.out.println("normal adding " + cat);
 		return cat;
 	}
 	private String getString(Queue<Character> c) {
@@ -87,6 +89,7 @@ public class FicFunctions {
 			else cat += c.remove();
 		}
 		c.remove();
+		//System.out.println("string adding " + cat);
 		return cat;
 	}
 	private String getCSArray(Queue<Character> c) {
@@ -94,6 +97,16 @@ public class FicFunctions {
 		c.remove();
 		while (c.peek() != ']') cat += c.remove();
 		c.remove();
+		if (c.peek() != ',') cat += getNormal(c);
+		else c.remove();
+		//System.out.println("array adding " + cat);
+		return cat;
+	}
+	private String makeNumberGreatAgain(String s) {
+		if (s.equals("null")) return "0";
+		String cat = "";
+		char[] c = s.toCharArray();
+		for (int i = 0; i < c.length; i++) { if (c[i] != ',') cat += c[i]; }
 		return cat;
 	}
 
@@ -124,47 +137,47 @@ public class FicFunctions {
 				}
 				// now depopulate queue into f
 				f.id = Integer.parseInt(temp.remove());
-				System.out.println("id: " + f.id);
+				//System.out.println("id: " + f.id);
 				f.title = temp.remove();
-				System.out.println("title: " + f.title);
+				//System.out.println("title: " + f.title);
 				f.author = temp.remove().split(",");
-				System.out.println("author: " + f.author);
+				//System.out.println("author: " + Arrays.toString(f.author));
 				f.rating = temp.remove();
-				System.out.println("rating: " + f.rating);
+				//System.out.println("rating: " + f.rating);
 				f.category = temp.remove().split(",");
-				System.out.println("category: " + f.category);
+				//System.out.println("category: " + Arrays.toString(f.category));
 				f.fandom = temp.remove();
-				System.out.println("fandom: " + f.fandom);
+				//System.out.println("fandom: " + f.fandom);
 				f.relationship = temp.remove();
-				System.out.println("relationship: " + f.relationship);
+				//System.out.println("relationship: " + f.relationship);
 				f.characters = temp.remove().split(",");
-				System.out.println("characters: " + f.characters);
+				//System.out.println("characters: " + f.characters);
 				f.tags = temp.remove();
-				System.out.println("tags: " + f.tags);
+				//System.out.println("tags: " + f.tags);
 				f.language = temp.remove();
-				System.out.println("language: " + f.language);
+				//System.out.println("language: " + f.language);
 				f.published = temp.remove();
-				System.out.println("published: " + f.published);
+				//System.out.println("published: " + f.published);
 				f.status = temp.remove();
-				System.out.println("status: " + f.status);
+				//System.out.println("status: " + f.status);
 				f.statusDate = temp.remove();
-				System.out.println("statusDate: " + f.statusDate);
-				f.words = Integer.parseInt(temp.remove());
-				System.out.println("words: " + f.words);
-				f.chapters = Integer.parseInt(temp.remove());
-				System.out.println("chapters: " + f.chapters);
-				f.comments = Integer.parseInt(temp.remove());
-				System.out.println("comments: " + f.comments);
-				f.kudos = Integer.parseInt(temp.remove());
-				System.out.println("kudos: " + f.kudos);
-				f.bookmarks = Integer.parseInt(temp.remove());
-				System.out.println("bookmarks: " + f.bookmarks);
-				f.hits = Integer.parseInt(temp.remove());
-				System.out.println("hits: " + f.hits);
+				//System.out.println("statusDate: " + f.statusDate);
+				f.words = Integer.parseInt(makeNumberGreatAgain(temp.remove()));
+				//System.out.println("words: " + f.words);
+				f.chapters = temp.remove();
+				//System.out.println("chapters: " + f.chapters);
+				f.comments = Integer.parseInt(makeNumberGreatAgain(temp.remove()));
+				//System.out.println("comments: " + f.comments);
+				f.kudos = Integer.parseInt(makeNumberGreatAgain(temp.remove()));
+				//System.out.println("kudos: " + f.kudos);
+				f.bookmarks = Integer.parseInt(makeNumberGreatAgain(temp.remove()));
+				//System.out.println("bookmarks: " + f.bookmarks);
+				f.hits = Integer.parseInt(makeNumberGreatAgain(temp.remove()));
+				//System.out.println("hits: " + f.hits);
 				f.allKudos = temp.remove().split(",");
-				System.out.println("allKudos: " + f.allKudos);
+				//System.out.println("allKudos: " + f.allKudos);
 				f.allBookmarks = temp.remove().split(",");
-				System.out.println("allBookmarks: " + f.allBookmarks);
+				//System.out.println("allBookmarks: " + f.allBookmarks);
 				// now add f to the tree
 				/*
 				Queue<String> lineQueue = new LinkedList<String>(Arrays.asList(currentline.split(",")));
