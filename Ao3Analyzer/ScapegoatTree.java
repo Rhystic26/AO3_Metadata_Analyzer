@@ -213,7 +213,7 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
         }
 
         return false;*/
-        double treeSizeLog = Math.log(this.size)/Math.log(1/this.alpha);
+        double treeSizeLog = Math.abs(Math.log(this.size)/Math.log(1/this.alpha));
         return(maxDepth <= Math.floor(treeSizeLog));
     }
 
