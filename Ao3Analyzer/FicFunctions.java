@@ -137,7 +137,7 @@ public class FicFunctions {
 				}
 				// now depopulate queue into f
 				f.id = Integer.parseInt(temp.remove());
-				//System.out.println("id: " + f.id);
+				System.out.println("id: " + f.id);
 				f.title = temp.remove();
 				//System.out.println("title: " + f.title);
 				f.author = temp.remove().split(",");
@@ -177,7 +177,7 @@ public class FicFunctions {
 				f.allKudos = temp.remove().split(",");
 				//System.out.println("allKudos: " + f.allKudos);
 				f.allBookmarks = temp.remove().split(",");
-				//System.out.println("allBookmarks: " + f.allBookmarks);
+				System.out.println("allBookmarks: " + f.allBookmarks);
 				// now add f to the tree
 				tree.put(f.id, f, new IDComparator());
 			}
@@ -188,8 +188,16 @@ public class FicFunctions {
 
 	public static void main(String[] args) {
 		FicFunctions f = new FicFunctions();
-		System.out.println("Enter a fic to search for: ");
+		System.out.println("reading from file...");
 		f.ingest("fanfics.csv");
+		System.out.println("done!");
+
+		Scanner in = new Scanner(System.in);
+		IDComparator comp = new IDComparator();
+
+		System.out.println("Enter a fic to search for: ");
+		String input = in.nextLine();
+		//System.out.println(f.tree.get(new Integer(Integer.parseInt(input)), comp));
 	}
 }
 
