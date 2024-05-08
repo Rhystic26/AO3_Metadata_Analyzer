@@ -195,20 +195,56 @@ public class FicFunctions {
 		System.out.println("done!");
 
 		Scanner in = new Scanner(System.in);
-		IDComparator comp = new IDComparator();
 
-		while (true) {
+		boolean running = true;
+		while (running) {
+			System.out.println("-".repeat(52));
+			System.out.println("\tPlease enter an option:");
+			System.out.println("\t1 - Get metadata for a specific fic");
+			System.out.println("\t2 - Get metadata for a specific tag");
+			System.out.println("\t3 - Get most popular fics for a specific tag");
+			System.out.println("\t4 - Get most popular tags for this data");
+			System.out.println("\tq - Quit");
+			System.out.println("-".repeat(52));
+
+			switch (in.nextLine()) {
+				case "1":
+					getFic(in, f);
+					break;
+				case "2":
+					getTag(in, f);
+					break;
+				case "3":
+					getPopFics(in, f);
+					break;
+				case "4":
+					getPopTags(in, f);
+					break;
+				case "q":
+					running = false;
+					break;
+				default:
+					System.out.println("Invalid input!");
+					break;
+			}
+		}
+	}
+
+	// some helper functions to improve readability
+	private static void getFic(Scanner in, FicFunctions f) {
 		System.out.println("Enter a fic to search for: ");
 		String input = in.nextLine();
-		Fic searchFor = f.tree.get(new Integer(Integer.parseInt(input)), comp);
+		Fic searchFor = f.tree.get(Integer.parseInt(input), new IDComparator());
 		if (searchFor != null) {
 			System.out.println("title: " + searchFor.title);
 			System.out.println("author(s): " + Arrays.toString(searchFor.author));
 			System.out.println("views: " + searchFor.hits);
 		}
-		else System.out.println("not a valid id >:/");
-		}
+		else System.out.println("not a valid id!");
 	}
+	private static void getTag(Scanner in, FicFunctions f) {}
+	private static void getPopFics(Scanner in, FicFunctions f) {}
+	private static void getPopTags(Scanner in, FicFunctions f) {}
 }
 
 class IDComparator implements Comparator<Integer> {
