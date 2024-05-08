@@ -118,6 +118,7 @@ public class FicFunctions {
 			scanner.nextLine();
 			// now ingest
 			while (scanner.hasNextLine()) {
+					System.out.println("ingesting new line");
 				// assign a new variable for accumulation purposes
 				Fic f = new Fic();
 				String currentline = scanner.nextLine();
@@ -131,6 +132,7 @@ public class FicFunctions {
 				String cat = "";
 				while (!linecharsqueue.isEmpty()) {
 					Character currentChar = linecharsqueue.peek();
+					System.out.println(currentChar);
 					if (currentChar == '\"') temp.add(getString(linecharsqueue));
 					else if (currentChar == '[') temp.add(getCSArray(linecharsqueue));
 					else temp.add(getNormal(linecharsqueue));
