@@ -220,15 +220,16 @@ public class FicFunctions {
 		Scanner in = new Scanner(System.in);
 
 		boolean running = true;
+		System.out.println("Welcome to the AO3 Fanfic Analyzer!\n");
 		while (running) {
-			System.out.println("-".repeat(52));
+			System.out.println("-".repeat(60));
 			System.out.println("\tPlease enter an option:");
-			System.out.println("\t1 - Get metadata for a specific fic");
-			System.out.println("\t2 - Get metadata for a specific tag");
-			System.out.println("\t3 - Get most popular fics for a specific tag");
-			System.out.println("\t4 - Get most popular tags for this data");
-			System.out.println("\tq - Quit");
-			System.out.println("-".repeat(52));
+			System.out.println("\t[1] - Get metadata for a specific fic");
+			System.out.println("\t[2] - Get metadata for a specific tag");
+			System.out.println("\t[3] - Get most popular fics for a specific tag");
+			System.out.println("\t[4] - Get most popular tags for this data");
+			System.out.println("\t[q] - Quit");
+			System.out.print("> ");
 
 			switch (in.nextLine()) {
 				case "1":
@@ -257,13 +258,18 @@ public class FicFunctions {
 	private static void getFic(Scanner in, FicFunctions f) {
 		System.out.println("Enter a fic to search for:");
 		String input = in.nextLine();
-		Fic searchFor = f.tree.get(Integer.parseInt(input), new IDComparator());
+		Fic searchFor = null;
+		try {
+			searchFor = f.tree.get(Integer.parseInt(input), new IDComparator());
+		} catch (NumberFormatException e) {
+			System.err.println("Not an integer!");
+		}
 		if (searchFor != null) {
 			System.out.println("title: " + searchFor.title);
 			System.out.println("author(s): " + Arrays.toString(searchFor.author));
 			System.out.println("views: " + searchFor.hits);
 		}
-		else System.out.println("not a valid id!");
+		else System.out.println("Not a valid ID!");
 	}
 	private static void getTag(Scanner in, FicFunctions f) {
 		System.out.println("Enter a tag to search for:");
