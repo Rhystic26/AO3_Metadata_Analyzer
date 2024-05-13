@@ -118,7 +118,7 @@ public class FicFunctions {
 			scanner.nextLine();
 			// now ingest
 			while (scanner.hasNextLine()) {
-					//System.out.println("ingesting new line");
+				// System.out.println("ingesting new line");
 				// assign a new variable for accumulation purposes
 				Fic f = new Fic();
 				String currentline = scanner.nextLine();
