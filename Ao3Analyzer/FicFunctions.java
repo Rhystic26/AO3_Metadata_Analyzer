@@ -185,6 +185,7 @@ public class FicFunctions {
 				// now add f to the tree
 				tree.put(f.id, f, new IDComparator());
 				// now add id for f to appropriate things
+				tagAssign(f);
 			}
 		} catch(FileNotFoundException e) {
 			System.err.println("File not found: " + e.getMessage());
@@ -194,9 +195,12 @@ public class FicFunctions {
 	private void tagAssign(Fic f) {
 		List<String> ficTags = Arrays.asList(f.tags.split(","));
 		for (String tag : ficTags) {
+			tag = tag.trim();
 			if (!tags.containsKey(tag)) tags.put(tag, new ScapegoatTree<Integer, Fic>(0.85));
-			tags.get(tag).put(f.hits, f, new IntComparator());
+			tags.get(tag).put(f.hits, f, new RevIntComparator());
 		}
+		//if (!ficTags.contains("Chess")) System.out.println(++wtf);
+		//if (!ficTags.contains("Chess") && !ficTags.contains(" Chess")) System.out.println(ficTags + "\n" + f.title);
 	}
 
 	public static void main(String[] args) {
@@ -252,18 +256,27 @@ public class FicFunctions {
 			searchFor = f.tree.get(Integer.parseInt(input), new IDComparator());
 		} catch (NumberFormatException e) {
 			System.err.println("Not an integer!");
+			return;
 		}
 		if (searchFor != null) {
 			System.out.println("title: " + searchFor.title);
 			System.out.println("author(s): " + Arrays.toString(searchFor.author));
 			System.out.println("views: " + searchFor.hits);
+			System.out.println("tags: " + searchFor.tags);
 		}
 		else System.out.println("Not a valid ID!");
 	}
 	private static void getTag(Scanner in, FicFunctions f) {
+			System.out.println("There are " + f.tree.size);
 		System.out.println("Enter a tag to search for:");
 		String input = in.nextLine();
-		//TODO what are we doing for tags??
+		ScapegoatTree<Integer, Fic> tagTree = null;
+		tagTree = f.tags.get(input);
+		if (tagTree != null) {
+			System.out.println("number of fics: " + tagTree.size);
+			System.out.println("most popular fic: " + f.tree.get(tagTree.inOrderTraversalValues(1).get(0).id, new IntComparator()).title);
+		}
+		else System.out.println("Not a valid tag!");
 	}
 	private static void getPopFics(Scanner in, FicFunctions f) {}
 	private static void getPopTags(Scanner in, FicFunctions f) {}
@@ -272,5 +285,11 @@ public class FicFunctions {
 class IDComparator implements Comparator<Integer> {
 	public int compare(Integer int1, Integer int2) {
 		return int1 - int2;
+	}
+}
+
+class RevIntComparator implements Comparator<Integer> {
+	public int compare(Integer int1, Integer int2) {
+		return int2 - int1;
 	}
 }
