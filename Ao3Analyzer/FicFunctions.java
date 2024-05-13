@@ -188,6 +188,29 @@ public class FicFunctions {
 		}
 	}
 
+	public void retrieveSingleTagSimple(Scanner s, Comparator comparator){
+		System.out.println("Enter a fanfiction ID number: ");
+		String input = s.nextLine();
+		int ficID = new Integer(Integer.parseInt(input));
+		Fic tag = this.tree.get(ficID, comparator);
+		if(tag == null){
+			System.out.println ("Not a valid ID");
+			return;
+		}
+		System.out.println("Retrieving data on fanfiction ID " + ficID + ":");
+		System.out.println("Title: " + tag.title);
+		System.out.println("Author(s): " + Arrays.toString(tag.author));
+		System.out.println("Date Published: " + tag.published);
+		System.out.println("Hits: " + tag.hits);
+		System.out.println("Rating: " + tag.rating);
+		System.out.println("Tags: " + tag.tags);
+	}
+
+	public void retrieveSingleTagDetailed(int ficID, Comparator comparator){
+		System.out.println("Not implemented yet");
+
+	}
+
 	public static void main(String[] args) {
 		FicFunctions f = new FicFunctions();
 		System.out.println("reading from file...");
@@ -197,16 +220,23 @@ public class FicFunctions {
 		Scanner in = new Scanner(System.in);
 		IDComparator comp = new IDComparator();
 
+		System.out.println("Welcome to the Ao3 Fanfiction Analyzer.");
+
 		while (true) {
-		System.out.println("Enter a fic to search for: ");
-		String input = in.nextLine();
-		Fic searchFor = f.tree.get(new Integer(Integer.parseInt(input)), comp);
-		if (searchFor != null) {
-			System.out.println("title: " + searchFor.title);
-			System.out.println("author(s): " + Arrays.toString(searchFor.author));
-			System.out.println("views: " + searchFor.hits);
-		}
-		else System.out.println("not a valid id >:/");
+			System.out.println("Enter a number to execute the corresponding command:");
+			System.out.println("[1] Retrieve simple data on a fanfic.");
+			System.out.println("[2] Quit.");
+			int command = in.nextInt();
+			in.nextLine();
+			if(command == 1){
+				f.retrieveSingleTagSimple(in, comp);
+			}
+			else if(command == 2){
+				break;
+			}
+			else{
+				System.out.println("Not a valid command");
+			}
 		}
 	}
 }

@@ -224,11 +224,6 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
         return(maxDepth <= Math.floor(treeSizeLog));
     }
 
-    public double floorOops(double f){
-        // TODO
-        return 1.0;
-    }
-
     /* 
 	 * Returns the value paired with the key 
      * Returns null if the key is not in the table
