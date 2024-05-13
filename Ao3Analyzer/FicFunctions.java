@@ -267,7 +267,6 @@ public class FicFunctions {
 		else System.out.println("Not a valid ID!");
 	}
 	private static void getTag(Scanner in, FicFunctions f) {
-			System.out.println("There are " + f.tree.size);
 		System.out.println("Enter a tag to search for:");
 		String input = in.nextLine();
 		ScapegoatTree<Integer, Fic> tagTree = null;
