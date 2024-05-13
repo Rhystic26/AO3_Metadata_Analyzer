@@ -321,7 +321,9 @@ public class FicFunctions {
 			}
 		} else System.out.println("Not a valid tag!");
 	}
-	private static void getPopTags(Scanner in, FicFunctions f) {}
+	private static void getPopTags(Scanner in, FicFunctions f) {
+		//foo
+	}
 }
 
 class IDComparator implements Comparator<Integer> {
