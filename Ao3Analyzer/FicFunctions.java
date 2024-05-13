@@ -278,12 +278,26 @@ public class FicFunctions {
 		} else System.out.println("Not a valid tag!");
 	}
 	private static void getPopFics(Scanner in, FicFunctions f) {
-		System.out.println("Enter a tag to search for\n(Leave blank for all fics):");
+		System.out.println("Enter a tag to search for\n(Leave blank for all tags):");
 		String input = in.nextLine();
 		ScapegoatTree<Integer, Fic> gpfTree = null;
 		gpfTree = (input.equals("")) ? f.tree : f.tags.get(input);
 		if (gpfTree != null) {
-			//foo
+			System.out.println("How many fics? (Max: " + gpfTree.size + ")");
+			try {
+				int n = Integer.parseInt(in.nextLine());
+				ArrayList<Fic> fics = gpfTree.inOrderTraversalValues(n);
+				String toprint = "Most popular fics";
+				toprint += (input.equals("")) ? ":" : " for tag: " + input + ":";
+				System.out.println(toprint);
+				for (int i = 0; i < fics.size(); i++) {
+					System.out.println(i + 1 + ". - " + fics.get(i).title + " (" + fics.get(i).hits + " hits)");
+				}
+			}
+			catch (NumberFormatException e) {
+				System.err.println("Not an integer!");
+				return;
+			}
 		} else System.out.println("Not a valid tag!");
 	}
 	private static void getPopTags(Scanner in, FicFunctions f) {}
