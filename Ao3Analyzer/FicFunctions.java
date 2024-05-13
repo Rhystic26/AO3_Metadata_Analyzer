@@ -255,7 +255,7 @@ public class FicFunctions {
 
 	// some helper functions to improve readability
 	private static void getFic(Scanner in, FicFunctions f) {
-		System.out.println("Enter a fic to search for: ");
+		System.out.println("Enter a fic to search for:");
 		String input = in.nextLine();
 		Fic searchFor = f.tree.get(Integer.parseInt(input), new IDComparator());
 		if (searchFor != null) {
@@ -265,7 +265,11 @@ public class FicFunctions {
 		}
 		else System.out.println("not a valid id!");
 	}
-	private static void getTag(Scanner in, FicFunctions f) {}
+	private static void getTag(Scanner in, FicFunctions f) {
+		System.out.println("Enter a tag to search for:");
+		String input = in.nextLine();
+		//TODO what are we doing for tags??
+	}
 	private static void getPopFics(Scanner in, FicFunctions f) {}
 	private static void getPopTags(Scanner in, FicFunctions f) {}
 }
