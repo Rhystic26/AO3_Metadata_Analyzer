@@ -118,7 +118,7 @@ public class FicFunctions {
 			scanner.nextLine();
 			// now ingest
 			while (scanner.hasNextLine()) {
-					//System.out.println("ingesting new line");
+				// System.out.println("ingesting new line");
 				// assign a new variable for accumulation purposes
 				Fic f = new Fic();
 				String currentline = scanner.nextLine();
@@ -186,6 +186,29 @@ public class FicFunctions {
 		} catch(FileNotFoundException e) {
 			System.err.println("File not found: " + e.getMessage());
 		}
+	}
+
+	public void retrieveSingleFicSimple(Scanner s, Comparator comparator){
+		System.out.println("Enter a fanfiction ID number: ");
+		String input = s.nextLine();
+		int ficID = new Integer(Integer.parseInt(input));
+		Fic tag = this.tree.get(ficID, comparator);
+		if(tag == null){
+			System.out.println ("Not a valid ID");
+			return;
+		}
+		System.out.println("Retrieving data on fanfiction ID " + ficID + ":");
+		System.out.println("Title: " + tag.title);
+		System.out.println("Author(s): " + Arrays.toString(tag.author));
+		System.out.println("Date Published: " + tag.published);
+		System.out.println("Hits: " + tag.hits);
+		System.out.println("Rating: " + tag.rating);
+		System.out.println("Tags: " + tag.tags);
+	}
+
+	public void retrieveSingleFicDetailed(int ficID, Comparator comparator){
+		System.out.println("Not implemented yet");
+
 	}
 
 	public static void main(String[] args) {

@@ -64,13 +64,16 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
     // Puts the key-value pair into the table 
     // The comparator is used to compare keys
     public void put(Key key, Value val, Comparator<Key> comparator){
+        // System.out.println("Inserting key " + key);
         int depthCounter = 0;
         root = putHelper(key, val, comparator, root, depthCounter);
     }
 
     public Node putHelper (Key key, Value val, Comparator<Key> comparator, Node r, int depthCounter){
         // Inserts the key-value pair into a new node if a node in the correct insertion position does not exist
+        // if(r !=null) System.out.println("Recursion point: node key " + r.key);
         if(r == null){
+            // System.out.println ("Actually inserting key " + key);
             r = new Node(key, val, null, null, 1, depthCounter);
             this.size += 1;
           
@@ -98,13 +101,13 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
         }
 
         // Checks to see if tree is alpha-height-balanced
-        /*if(checkHeightBalance(this.root) == false){
+        if(checkHeightBalance(this.root) == false){
             // Checks to see if the current node is eligible to be a scapegoat; if true, rebalances tree
             if(checkWeightBalance(r) == false){
                 r.isScapegoat = true;
                 rebalance(r, comparator, depthCounter);
             }
-        }*/
+        }
 
         return r;
     }
@@ -135,9 +138,14 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
         // Deletes all nodes in the subtree (including the scapegoat) and replaces the scapegoat with the median key-value pair from the initial subtree
         rebalanceTraversalDelete(r);
         int medianIndex = sortedKeys.size()/2;
-        r = new Node(sortedKeys.get(medianIndex), sortedValues.get(medianIndex), null, null, 1, depthCounter);
-        
+        // System.out.println("Median Index: " + medianIndex);
+        // System.out.println(sortedKeys.toString());
+        // System.out.println(sortedKeys.get(medianIndex));
+        // r = new Node(sortedKeys.get(medianIndex), sortedValues.get(medianIndex), null, null, 1, depthCounter);
+        rebalancePut(r, sortedKeys.get(medianIndex), sortedValues.get(medianIndex), comparator, depthCounter);
         // Inserts remaining key-value pairs into subtree in balanced order
+        sortedKeys.remove(medianIndex);
+        sortedValues.remove(medianIndex);
         for(int i=0; i<sortedKeys.size(); i++){
             rebalancePut(r, sortedKeys.get(i), sortedValues.get(i), comparator, depthCounter);
         }
@@ -172,8 +180,9 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
 
     public Node rebalancePutHelper(Node r, Key key, Value val, Comparator<Key> comparator, int depthCounter){
         // TODO
-
+        // System.out.println("rebalancePut key " + key);
         if(r == null){
+            // System.out.println("rebalancePut inserting key " + key);
             r = new Node(key, val, null, null, 1, depthCounter);
             this.size += 1;
           
@@ -190,11 +199,11 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
         }
 
         if(comparator.compare(key, r.key) < 0){
-            r.left = putHelper(key, val, comparator, r.left, depthCounter+1);
+            r.left = rebalancePutHelper(r.left, key, val, comparator, depthCounter+1);
         }
         
         if(comparator.compare(key, r.key) > 0){
-            r.right = putHelper(key, val, comparator, r.right, depthCounter+1);
+            r.right = rebalancePutHelper(r.right, key, val, comparator, depthCounter+1);
         }
 
         return r;
@@ -213,11 +222,6 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
         return false;*/
         double treeSizeLog = Math.abs(Math.log(this.size)/Math.log(1/this.alpha));
         return(maxDepth <= Math.floor(treeSizeLog));
-    }
-
-    public double floorOops(double f){
-        // TODO
-        return 1.0;
     }
 
     /* 
