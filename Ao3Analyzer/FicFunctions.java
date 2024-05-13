@@ -273,11 +273,19 @@ public class FicFunctions {
 		tagTree = f.tags.get(input);
 		if (tagTree != null) {
 			System.out.println("number of fics: " + tagTree.size);
-			System.out.println("most popular fic: " + f.tree.get(tagTree.inOrderTraversalValues(1).get(0).id, new IntComparator()).title);
-		}
-		else System.out.println("Not a valid tag!");
+			System.out.println("most popular fic: " + 
+					f.tree.get(tagTree.inOrderTraversalValues(1).get(0).id, new IntComparator()).title);
+		} else System.out.println("Not a valid tag!");
 	}
-	private static void getPopFics(Scanner in, FicFunctions f) {}
+	private static void getPopFics(Scanner in, FicFunctions f) {
+		System.out.println("Enter a tag to search for\n(Leave blank for all fics):");
+		String input = in.nextLine();
+		ScapegoatTree<Integer, Fic> gpfTree = null;
+		gpfTree = (input.equals("")) ? f.tree : f.tags.get(input);
+		if (gpfTree != null) {
+			//foo
+		} else System.out.println("Not a valid tag!");
+	}
 	private static void getPopTags(Scanner in, FicFunctions f) {}
 }
 
