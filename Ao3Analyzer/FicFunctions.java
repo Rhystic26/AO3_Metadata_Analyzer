@@ -218,27 +218,56 @@ public class FicFunctions {
 		System.out.println("done!");
 
 		Scanner in = new Scanner(System.in);
-		IDComparator comp = new IDComparator();
 
-		System.out.println("Welcome to the Ao3 Fanfiction Analyzer.");
+		boolean running = true;
+		while (running) {
+			System.out.println("-".repeat(52));
+			System.out.println("\tPlease enter an option:");
+			System.out.println("\t1 - Get metadata for a specific fic");
+			System.out.println("\t2 - Get metadata for a specific tag");
+			System.out.println("\t3 - Get most popular fics for a specific tag");
+			System.out.println("\t4 - Get most popular tags for this data");
+			System.out.println("\tq - Quit");
+			System.out.println("-".repeat(52));
 
-		while (true) {
-			System.out.println("Enter a number to execute the corresponding command:");
-			System.out.println("[1] Retrieve simple data on a fanfic.");
-			System.out.println("[2] Quit.");
-			int command = in.nextInt();
-			in.nextLine();
-			if(command == 1){
-				f.retrieveSingleFicSimple(in, comp);
-			}
-			else if(command == 2){
-				break;
-			}
-			else{
-				System.out.println("Not a valid command");
+			switch (in.nextLine()) {
+				case "1":
+					getFic(in, f);
+					break;
+				case "2":
+					getTag(in, f);
+					break;
+				case "3":
+					getPopFics(in, f);
+					break;
+				case "4":
+					getPopTags(in, f);
+					break;
+				case "q":
+					running = false;
+					break;
+				default:
+					System.out.println("Invalid input!");
+					break;
 			}
 		}
 	}
+
+	// some helper functions to improve readability
+	private static void getFic(Scanner in, FicFunctions f) {
+		System.out.println("Enter a fic to search for: ");
+		String input = in.nextLine();
+		Fic searchFor = f.tree.get(Integer.parseInt(input), new IDComparator());
+		if (searchFor != null) {
+			System.out.println("title: " + searchFor.title);
+			System.out.println("author(s): " + Arrays.toString(searchFor.author));
+			System.out.println("views: " + searchFor.hits);
+		}
+		else System.out.println("not a valid id!");
+	}
+	private static void getTag(Scanner in, FicFunctions f) {}
+	private static void getPopFics(Scanner in, FicFunctions f) {}
+	private static void getPopTags(Scanner in, FicFunctions f) {}
 }
 
 class IDComparator implements Comparator<Integer> {
