@@ -188,7 +188,7 @@ public class FicFunctions {
 		}
 	}
 
-	public void retrieveSingleTagSimple(Scanner s, Comparator comparator){
+	public void retrieveSingleFicSimple(Scanner s, Comparator comparator){
 		System.out.println("Enter a fanfiction ID number: ");
 		String input = s.nextLine();
 		int ficID = new Integer(Integer.parseInt(input));
@@ -206,7 +206,7 @@ public class FicFunctions {
 		System.out.println("Tags: " + tag.tags);
 	}
 
-	public void retrieveSingleTagDetailed(int ficID, Comparator comparator){
+	public void retrieveSingleFicDetailed(int ficID, Comparator comparator){
 		System.out.println("Not implemented yet");
 
 	}
@@ -229,7 +229,7 @@ public class FicFunctions {
 			int command = in.nextInt();
 			in.nextLine();
 			if(command == 1){
-				f.retrieveSingleTagSimple(in, comp);
+				f.retrieveSingleFicSimple(in, comp);
 			}
 			else if(command == 2){
 				break;
