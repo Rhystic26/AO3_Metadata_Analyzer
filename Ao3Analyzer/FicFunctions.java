@@ -184,23 +184,30 @@ public class FicFunctions {
 				//System.out.println("allBookmarks: " + f.allBookmarks);
 				// now add f to the tree
 				tree.put(f.id, f, new IDComparator());
-				// now add id for f to appropriate things
-				tagAssign(f);
 			}
 		} catch(FileNotFoundException e) {
 			System.err.println("File not found: " + e.getMessage());
 		}
 	}
 
+	public void assignAllTags() {
+		tags = new Hashtable<String, ScapegoatTree<Integer, Fic>>();
+		ArrayList<Fic> allFics = tree.inOrderTraversalValues(tree.size);
+		for (Fic fic : allFics) tagAssign(fic);
+	}
+
 	public void tagAssign(Fic f) {
 		// this splits the tags into a list for ease
 		List<String> ficTags = Arrays.asList(f.tags.split(","));
+		//System.out.println("Tags for " + f.id + ": " + ficTags);
 		// this assigns fics to tags and creates new tag trees as necessary
 		for (String tag : ficTags) {
 			tag = tag.trim();
+			//if (tag.equals("Chess")) System.out.println("putting " + f.id + " in Chess");
 			if (!tags.containsKey(tag)) tags.put(tag, new ScapegoatTree<Integer, Fic>(0.85));
 			tags.get(tag).put(f.hits, f, new RevIntComparator());
 		}
+		//if (ficTags.contains("Chess") && !tags.get("Chess").inOrderTraversalValues(tags.get("Chess").size).contains(f)) System.out.println(f.id);
 		//if (!ficTags.contains("Chess")) System.out.println(++wtf);
 		//if (!ficTags.contains("Chess") && !ficTags.contains(" Chess")) System.out.println(ficTags + "\n" + f.title);
 	}
@@ -209,6 +216,7 @@ public class FicFunctions {
 		FicFunctions f = new FicFunctions();
 		System.out.println("reading from file...");
 		f.ingest("fanfics.csv");
+		f.assignAllTags();
 		System.out.println("done!");
 
 		Scanner in = new Scanner(System.in);
@@ -222,7 +230,7 @@ public class FicFunctions {
 			System.out.println("\t  [1] - Get metadata for a specific fic");
 			System.out.println("\t  [2] - Get metadata for a specific tag");
 			System.out.println("\t  [3] - Get most popular fics for a specific tag");
-			System.out.println("\t  [4] - Get most popular tags for this data");
+			System.out.println("\t  [4] - Get most popular tags for this data [NOT WORKING]");
 			System.out.println("\t  [5] - Delete all fics with a specific tag");
 			System.out.println("\t  [q] - Quit");
 			System.out.print("> ");
@@ -272,6 +280,7 @@ public class FicFunctions {
 		}
 		else System.out.println("Not a valid ID!");
 	}
+
 	private static void getTag(Scanner in, FicFunctions f) {
 		System.out.println("Enter a tag to search for:");
 		String input = in.nextLine();
@@ -280,12 +289,15 @@ public class FicFunctions {
 		if (tagTree != null) {
 			System.out.println("number of fics: " + tagTree.size);
 			System.out.println("most popular fic: " + 
-					f.tree.get(tagTree.inOrderTraversalValues(1).get(0).id, new IntComparator()).title);
+					f.tree.get(tagTree.inOrderTraversalValues(1).get(0).id, new IntComparator()).title +
+					" ("+ f.tree.get(tagTree.inOrderTraversalValues(1).get(0).id,
+									new IntComparator()).hits +
+				   	" hits)");
 		} else System.out.println("Not a valid tag!");
 	}
+
 	private static void deleteTag(Scanner in, FicFunctions f){
 		// Finish
-		IntComparator ic = new IntComparator();
 		System.out.println("Enter a tag to delete:");
 		String input = in.nextLine();
 		ScapegoatTree<Integer, Fic> tagTree = null;
@@ -294,25 +306,35 @@ public class FicFunctions {
 			System.out.println("Not a valid tag!");
 			return;
 		}
+		deleteTagHelper(tagTree, input, f);
+		System.out.println("Tag '" + input + "' deleted.");
+	}
+
+	private static void deleteTagHelper(ScapegoatTree<Integer, Fic> tagTree, String input, FicFunctions f) {
+		IntComparator ic = new IntComparator();
 		// we want an arraylist of all the fics in tagTree
 		ArrayList<Fic> fics = tagTree.inOrderTraversalValues(tagTree.size);
 		// we want the IDs of these fics
 		ArrayList<Integer> ids = new ArrayList<Integer>(tagTree.size);
 		for (Fic fic : fics) { ids.add(fic.id); }
-		System.out.println(ids);
-		System.out.println(ids.size());
-		for (Integer id : ids) { f.tree.delete(id, ic); }
+		//System.out.println(ids);
+		//System.out.println(ids.size());
+		//System.out.println(ids.contains(26956702));
+		int i = 0;
+		for (Integer id : ids) {
+			f.tree.delete(id, ic);
+		}
 		// easiest way to update tags is to just remake the entire list
-		f.tags = new Hashtable<String, ScapegoatTree<Integer, Fic>>();
-		ArrayList<Fic> allFics = f.tree.inOrderTraversalValues(f.tree.size);
-		for (Fic fic : allFics) { f.tagAssign(fic); }
-		System.out.println("Tag '" + input + "' deleted.");
+		f.assignAllTags();
+		tagTree = f.tags.get(input);
+		if (tagTree != null) deleteTagHelper(tagTree, input, f);
 	}
+
 	private static void getPopFics(Scanner in, FicFunctions f) {
-		System.out.println("Enter a tag to search for\n(Leave blank for all tags):");
+		System.out.println("Enter a tag to search for (Leave blank for all tags):");
 		String input = in.nextLine();
 		ScapegoatTree<Integer, Fic> gpfTree = null;
-		gpfTree = (input.equals("")) ? f.tree : f.tags.get(input);
+		gpfTree = (input.equals("")) ? theAllTree(f) : f.tags.get(input);
 		if (gpfTree != null) {
 			System.out.println("How many fics? (Max: " + gpfTree.size + ")");
 			try {
@@ -331,8 +353,26 @@ public class FicFunctions {
 			}
 		} else System.out.println("Not a valid tag!");
 	}
+
+	private static ScapegoatTree<Integer, Fic> theAllTree(FicFunctions f) {
+		ArrayList<Fic> allFics = f.tree.inOrderTraversalValues(f.tree.size);
+		//System.out.println(allFics.size());
+		ScapegoatTree<Integer, Fic> toReturn = new ScapegoatTree<Integer, Fic>(0.8);
+		RevIntComparator ic = new RevIntComparator();
+		for (Fic fic : allFics) toReturn.put(fic.hits, fic, ic);
+		//System.out.println(toReturn.size);
+		return toReturn;
+	}
+
 	private static void getPopTags(Scanner in, FicFunctions f) {
-		//foo
+			/*
+		ScapegoatTree tagsTree = new ScapegoatTree<Integer, String>(0.8);
+		for (int i = 0; i < f.tags.size(); i++) {
+			
+		}
+		System.out.println("How many tags? (Max " + f.tags.size() + ")");
+		String input = in.nextLine();
+		*/
 	}
 }
 
