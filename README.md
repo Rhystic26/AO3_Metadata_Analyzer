@@ -12,8 +12,11 @@ This package is a command-line tool that can perform analysis on CSV files of Ar
 2. Open a terminal and `cd` to the repository.
 3. `mkdir bin`
 4. `javac -d bin Ao3Analyzer/*.java`
-5. `java -cp bin Ao3Analyzer.FicFunctions`
-6. (Optional) To use a custom dataset, rename it to 'fanfics.csv' and put it in the root folder of the repository (erasing the starter dataset).
+5. (Optional) To use a custom dataset, rename it to 'fanfics.csv' and put it in the root folder of the repository (erasing the starter dataset).
+
+
+## Usage
+To use the program, run `java -cp bin Ao3Analyzer.FicFunctions` from the repository's root folder.
 
 ## Commands
 The following commands can be run from within the program:
