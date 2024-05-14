@@ -310,10 +310,6 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
             }
 
             if(r.left != null && r.right != null){
-                Node minSubtreeNode =  getMinKeyNodeInRightSubtree(r);
-                r.key = minSubtreeNode.key;
-                r.val = minSubtreeNode.val;
-                // System.out.println(r.key);
                 r.right = deleteHelper(r.right, r.key, comparator);
                 return r;
             }
@@ -354,7 +350,7 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
     }
 
 	public ArrayList<Value> inOrderTraversalValues(int n){
-        ArrayList<Value> values = new ArrayList<Value>();
+        ArrayList<Value> values = new ArrayList<Value>(n);
         inOrderTraversalValuesHelper(values, this.root, n);
         return values;
     }
