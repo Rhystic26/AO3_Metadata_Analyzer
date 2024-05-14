@@ -284,26 +284,23 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
         }
 
         if(comparator.compare(key, r.key) < 0){
-            System.out.println("Going left");
             r.left = deleteHelper(r.left, key, comparator);
         }
         
         if(comparator.compare(key, r.key) > 0){
-            System.out.println("Going right");
             r.right = deleteHelper(r.right, key, comparator);
         }
 
         if(comparator.compare(key, r.key) == 0){
             System.out.println("Deleting");
             if(r.left == null && r.right == null){
+                System.out.println("No children at key " + r.key);
                 r = null;
                 return r;
             }
 
             if(r.left == null){
-                System.out.println("Only a right child");
                 r = r.right;
-                System.out.println(r.key);
                 return r;
             }
 
@@ -314,8 +311,10 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
 
             if(r.left != null && r.right != null){
                 Node minSubtreeNode =  getMinKeyNodeInRightSubtree(r);
-                r = minSubtreeNode;
-                removeNodeExcludeRoot(r, key, comparator);
+                r.key = minSubtreeNode.key;
+                r.val = minSubtreeNode.val;
+                System.out.println(r.key);
+                r.right = deleteHelper(r.right, r.key, comparator);
                 return r;
             }
         }
@@ -336,8 +335,8 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
         return getMinKeyNodeInRightSubtreeHelper(root.left);
     }
 
-    public void removeNodeExcludeRoot(Node root, Key key, Comparator<Key> comparator){
-        deleteHelper(root.right, key, comparator);
+    public Node removeNodeExcludeRoot(Node root, Key key, Comparator<Key> comparator){
+        return deleteHelper(root.right, key, comparator);
     }
 
     public ArrayList<Key> inOrderTraversalKeys(int n){
@@ -372,12 +371,14 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
     public static void main(String[] args) {
         ScapegoatTree<Integer, String> sgt = new ScapegoatTree<Integer, String>(0.5);
         IntComparator ic = new IntComparator();
-        sgt.put(5, "d", ic);
+        sgt.put(6, "f", ic);
         sgt.put(1, "a", ic);
-        sgt.put(4, "e", ic);
+        sgt.put(4, "d", ic);
         sgt.put(2, "b", ic);
         sgt.put(3, "c", ic);
-        sgt.delete(1, ic);
+        sgt.put(5, "e", ic);
+        System.out.println(sgt.root.key);
+        sgt.delete(4, ic);
         System.out.println((sgt.inOrderTraversalKeys(5)).toString());
         String ans = sgt.get(1, ic);
         System.out.println(ans);
