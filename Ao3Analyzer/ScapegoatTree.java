@@ -292,9 +292,7 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
         }
 
         if(comparator.compare(key, r.key) == 0){
-            System.out.println("Deleting");
             if(r.left == null && r.right == null){
-                System.out.println("No children at key " + r.key);
                 r = null;
                 return r;
             }
