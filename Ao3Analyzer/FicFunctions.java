@@ -230,8 +230,7 @@ public class FicFunctions {
 			System.out.println("\t  [1] - Get metadata for a specific fic");
 			System.out.println("\t  [2] - Get metadata for a specific tag");
 			System.out.println("\t  [3] - Get most popular fics for a specific tag");
-			System.out.println("\t  [4] - Get most popular tags for this data [NOT WORKING]");
-			System.out.println("\t  [5] - Delete all fics with a specific tag");
+			System.out.println("\t  [4] - Delete all fics with a specific tag");
 			System.out.println("\t  [q] - Quit");
 			System.out.print("> ");
 
@@ -246,9 +245,6 @@ public class FicFunctions {
 					getPopFics(in, f);
 					break;
 				case "4":
-					getPopTags(in, f);
-					break;
-				case "5":
 					deleteTag(in, f);
 					break;
 				case "q":
