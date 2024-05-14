@@ -5,6 +5,8 @@ import java.util.*;
 
 public class FicFunctions {
 	public static ScapegoatTree<Integer, Fic> tree = new ScapegoatTree<Integer, Fic>(0.75);
+	private Hashtable<String, ScapegoatTree<Integer, Fic>> tags =
+			new Hashtable<String, ScapegoatTree<Integer, Fic>>();
 
 	private class Date {
 		public int year;
@@ -118,7 +120,7 @@ public class FicFunctions {
 			scanner.nextLine();
 			// now ingest
 			while (scanner.hasNextLine()) {
-				// System.out.println("ingesting new line");
+					//System.out.println("ingesting new line");
 				// assign a new variable for accumulation purposes
 				Fic f = new Fic();
 				String currentline = scanner.nextLine();
@@ -182,33 +184,23 @@ public class FicFunctions {
 				//System.out.println("allBookmarks: " + f.allBookmarks);
 				// now add f to the tree
 				tree.put(f.id, f, new IDComparator());
+				// now add id for f to appropriate things
+				tagAssign(f);
 			}
 		} catch(FileNotFoundException e) {
 			System.err.println("File not found: " + e.getMessage());
 		}
 	}
 
-	public void retrieveSingleFicSimple(Scanner s, Comparator comparator){
-		System.out.println("Enter a fanfiction ID number: ");
-		String input = s.nextLine();
-		int ficID = new Integer(Integer.parseInt(input));
-		Fic tag = this.tree.get(ficID, comparator);
-		if(tag == null){
-			System.out.println ("Not a valid ID");
-			return;
+	private void tagAssign(Fic f) {
+		List<String> ficTags = Arrays.asList(f.tags.split(","));
+		for (String tag : ficTags) {
+			tag = tag.trim();
+			if (!tags.containsKey(tag)) tags.put(tag, new ScapegoatTree<Integer, Fic>(0.85));
+			tags.get(tag).put(f.hits, f, new RevIntComparator());
 		}
-		System.out.println("Retrieving data on fanfiction ID " + ficID + ":");
-		System.out.println("Title: " + tag.title);
-		System.out.println("Author(s): " + Arrays.toString(tag.author));
-		System.out.println("Date Published: " + tag.published);
-		System.out.println("Hits: " + tag.hits);
-		System.out.println("Rating: " + tag.rating);
-		System.out.println("Tags: " + tag.tags);
-	}
-
-	public void retrieveSingleFicDetailed(int ficID, Comparator comparator){
-		System.out.println("Not implemented yet");
-
+		//if (!ficTags.contains("Chess")) System.out.println(++wtf);
+		//if (!ficTags.contains("Chess") && !ficTags.contains(" Chess")) System.out.println(ficTags + "\n" + f.title);
 	}
 
 	public static void main(String[] args) {
@@ -220,15 +212,17 @@ public class FicFunctions {
 		Scanner in = new Scanner(System.in);
 
 		boolean running = true;
+		System.out.println("-".repeat(60));
+		System.out.println("\nWelcome to the AO3 Fanfic Analyzer!\n");
 		while (running) {
-			System.out.println("-".repeat(52));
+			System.out.println("-".repeat(60));
 			System.out.println("\tPlease enter an option:");
-			System.out.println("\t1 - Get metadata for a specific fic");
-			System.out.println("\t2 - Get metadata for a specific tag");
-			System.out.println("\t3 - Get most popular fics for a specific tag");
-			System.out.println("\t4 - Get most popular tags for this data");
-			System.out.println("\tq - Quit");
-			System.out.println("-".repeat(52));
+			System.out.println("\t  [1] - Get metadata for a specific fic");
+			System.out.println("\t  [2] - Get metadata for a specific tag");
+			System.out.println("\t  [3] - Get most popular fics for a specific tag");
+			System.out.println("\t  [4] - Get most popular tags for this data");
+			System.out.println("\t  [q] - Quit");
+			System.out.print("> ");
 
 			switch (in.nextLine()) {
 				case "1":
@@ -255,17 +249,35 @@ public class FicFunctions {
 
 	// some helper functions to improve readability
 	private static void getFic(Scanner in, FicFunctions f) {
-		System.out.println("Enter a fic to search for: ");
+		System.out.println("Enter a fic to search for:");
 		String input = in.nextLine();
-		Fic searchFor = f.tree.get(Integer.parseInt(input), new IDComparator());
+		Fic searchFor = null;
+		try {
+			searchFor = f.tree.get(Integer.parseInt(input), new IDComparator());
+		} catch (NumberFormatException e) {
+			System.err.println("Not an integer!");
+			return;
+		}
 		if (searchFor != null) {
 			System.out.println("title: " + searchFor.title);
 			System.out.println("author(s): " + Arrays.toString(searchFor.author));
 			System.out.println("views: " + searchFor.hits);
+			System.out.println("tags: " + searchFor.tags);
 		}
-		else System.out.println("not a valid id!");
+		else System.out.println("Not a valid ID!");
 	}
-	private static void getTag(Scanner in, FicFunctions f) {}
+	private static void getTag(Scanner in, FicFunctions f) {
+			System.out.println("There are " + f.tree.size);
+		System.out.println("Enter a tag to search for:");
+		String input = in.nextLine();
+		ScapegoatTree<Integer, Fic> tagTree = null;
+		tagTree = f.tags.get(input);
+		if (tagTree != null) {
+			System.out.println("number of fics: " + tagTree.size);
+			System.out.println("most popular fic: " + f.tree.get(tagTree.inOrderTraversalValues(1).get(0).id, new IntComparator()).title);
+		}
+		else System.out.println("Not a valid tag!");
+	}
 	private static void getPopFics(Scanner in, FicFunctions f) {}
 	private static void getPopTags(Scanner in, FicFunctions f) {}
 }
@@ -273,5 +285,11 @@ public class FicFunctions {
 class IDComparator implements Comparator<Integer> {
 	public int compare(Integer int1, Integer int2) {
 		return int1 - int2;
+	}
+}
+
+class RevIntComparator implements Comparator<Integer> {
+	public int compare(Integer int1, Integer int2) {
+		return int2 - int1;
 	}
 }

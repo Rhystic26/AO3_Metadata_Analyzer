@@ -17,7 +17,7 @@ class IntComparator implements Comparator<Integer>{
 public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
 	
 	private Node root;
-	private int size;
+	public int size;
     private int maxSize;
     private Node scapegoat;
     private double alpha; // Must be between 0.5 and 1
@@ -269,18 +269,32 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
         System.out.println("Not implemented yet");
     }
 
-    public ArrayList<Key> inOrderTraversalKeys(){
+    public ArrayList<Key> inOrderTraversalKeys(int n){
         ArrayList<Key> keys = new ArrayList<Key>();
-        inOrderTraversalKeysHelper(keys, this.root);
+        inOrderTraversalKeysHelper(keys, this.root, n);
         return keys;
     }
 
-    public void inOrderTraversalKeysHelper(ArrayList<Key> keys, Node currentNode){
-        if(currentNode == null) return;
+    public void inOrderTraversalKeysHelper(ArrayList<Key> keys, Node currentNode, int n){
+        if(currentNode == null || keys.size() >= n) return;
 
-        inOrderTraversalKeysHelper(keys, currentNode.left);
+        inOrderTraversalKeysHelper(keys, currentNode.left, n);
         keys.add(currentNode.key);
-        inOrderTraversalKeysHelper(keys, currentNode.right);
+        inOrderTraversalKeysHelper(keys, currentNode.right, n);
+    }
+
+	public ArrayList<Value> inOrderTraversalValues(int n){
+        ArrayList<Value> values = new ArrayList<Value>();
+        inOrderTraversalValuesHelper(values, this.root, n);
+        return values;
+    }
+
+	private void inOrderTraversalValuesHelper(ArrayList<Value> values, Node currentNode, int n){
+        if(currentNode == null || values.size() >= n) return;
+
+        inOrderTraversalValuesHelper(values, currentNode.left, n);
+        values.add(currentNode.val);
+        inOrderTraversalValuesHelper(values, currentNode.right, n);
     }
 
     public static void main(String[] args) {
@@ -290,11 +304,6 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
         sgt.put(1, "a", ic);
         sgt.put(5, "e", ic);
         sgt.put(2, "b", ic);
-        ArrayList<Integer> k1 = sgt.inOrderTraversalKeys();
-        System.out.println(k1.toString());   
-        sgt.put(3, "c", ic);
-        ArrayList<Integer> k2 = sgt.inOrderTraversalKeys();
-        System.out.println(k2.toString()); 
 
     }
 }
