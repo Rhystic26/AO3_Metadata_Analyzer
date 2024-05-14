@@ -19,7 +19,11 @@ This package is a command-line tool that can perform analysis on CSV files of Ar
 The following commands can be run from within the program:
 
 [1] - Get metadata for a specific fic - given a fanfiction ID number, this returns the work's name, author(s), views, and tags.
+
 [2] - Get metadata for a specific tag - given a tag, this returns the number of fics with that tag and the most popular fic from that tag in the dataset.
+
 [3] - Get most popular fics for a specific tag - given a tag and a number `n`, this returns the n most popular works for that tag in the dataset.
+
 [4] - Get most popular tags for this data - given a number `n`, this returns the n most popular fics in the dataset.
+
 [5] - Delete all fics with a specific tag - given a tag, this deletes all fics containing that tag from the **active** dataset (it will not delete them from the CSV file - this is useful if you want to see the effects of large-scale changes to the dataset without permanently altering your data).
