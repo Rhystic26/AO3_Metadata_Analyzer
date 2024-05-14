@@ -365,6 +365,7 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
         if(currentNode == null || values.size() >= n) return;
 
         inOrderTraversalValuesHelper(values, currentNode.left, n);
+		if (values.size() >= n) return;
         values.add(currentNode.val);
         inOrderTraversalValuesHelper(values, currentNode.right, n);
     }
