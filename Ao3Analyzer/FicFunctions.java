@@ -192,8 +192,10 @@ public class FicFunctions {
 		}
 	}
 
-	private void tagAssign(Fic f) {
+	public void tagAssign(Fic f) {
+		// this splits the tags into a list for ease
 		List<String> ficTags = Arrays.asList(f.tags.split(","));
+		// this assigns fics to tags and creates new tag trees as necessary
 		for (String tag : ficTags) {
 			tag = tag.trim();
 			if (!tags.containsKey(tag)) tags.put(tag, new ScapegoatTree<Integer, Fic>(0.85));
@@ -292,10 +294,18 @@ public class FicFunctions {
 			System.out.println("Not a valid tag!");
 			return;
 		}
-		ArrayList<Integer> tagKeys = tagTree.inOrderTraversalKeys(tagTree.size());
-		for(int i=0; i<tagKeys.size(); i++){
-			f.tree.delete(tagKeys.get(i), ic);
-		}
+		// we want an arraylist of all the fics in tagTree
+		ArrayList<Fic> fics = tagTree.inOrderTraversalValues(tagTree.size);
+		// we want the IDs of these fics
+		ArrayList<Integer> ids = new ArrayList<Integer>(tagTree.size);
+		for (Fic fic : fics) { ids.add(fic.id); }
+		System.out.println(ids);
+		System.out.println(ids.size());
+		for (Integer id : ids) { f.tree.delete(id, ic); }
+		// easiest way to update tags is to just remake the entire list
+		f.tags = new Hashtable<String, ScapegoatTree<Integer, Fic>>();
+		ArrayList<Fic> allFics = f.tree.inOrderTraversalValues(f.tree.size);
+		for (Fic fic : allFics) { f.tagAssign(fic); }
 		System.out.println("Tag '" + input + "' deleted.");
 	}
 	private static void getPopFics(Scanner in, FicFunctions f) {

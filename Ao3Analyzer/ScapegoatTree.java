@@ -310,10 +310,6 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
             }
 
             if(r.left != null && r.right != null){
-                Node minSubtreeNode =  getMinKeyNodeInRightSubtree(r);
-                r.key = minSubtreeNode.key;
-                r.val = minSubtreeNode.val;
-                // System.out.println(r.key);
                 r.right = deleteHelper(r.right, r.key, comparator);
                 return r;
             }
