@@ -271,7 +271,6 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
 	 * The comparator is used to compare keys
 	 */
     public void delete(Key key, Comparator<Key> comparator){
-        // TODO
         if(contains(key, comparator) == false){
             System.out.println("Key not in tree");
             return;
