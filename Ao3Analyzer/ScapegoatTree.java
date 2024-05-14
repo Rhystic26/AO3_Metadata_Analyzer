@@ -135,23 +135,24 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
         ArrayList<Key> sortedKeys = new ArrayList<Key>(unsortedKeys);
         sortedKeys.sort(comparator);
         ArrayList<Value> sortedValues = new ArrayList<Value>();
-       
+        // System.out.println("Sorted rebalance keys: "+sortedKeys.toString());
         for(int i=0; i<unsortedValues.size(); i++){
             sortedValues.add((sortedKeys.indexOf(unsortedKeys.get(i))), unsortedValues.get(i));
         }
         // Deletes all nodes in the subtree (including the scapegoat) and replaces the scapegoat with the median key-value pair from the initial subtree
-        rebalanceTraversalDelete(r);
+        r = rebalanceTraversalDelete(r);
         int medianIndex = sortedKeys.size()/2;
         // System.out.println("Median Index: " + medianIndex);
         // System.out.println(sortedKeys.toString());
-        // System.out.println(sortedKeys.get(medianIndex));
+        // System.out.println("Key at median index: "+sortedKeys.get(medianIndex));
         // r = new Node(sortedKeys.get(medianIndex), sortedValues.get(medianIndex), null, null, 1, depthCounter);
-        rebalancePut(r, sortedKeys.get(medianIndex), sortedValues.get(medianIndex), comparator, depthCounter);
+        r = rebalancePut(r, sortedKeys.get(medianIndex), sortedValues.get(medianIndex), comparator, depthCounter);
         // Inserts remaining key-value pairs into subtree in balanced order
         sortedKeys.remove(medianIndex);
         sortedValues.remove(medianIndex);
+        // System.out.println("Rebalanced subtree root key "+r.key);
         for(int i=0; i<sortedKeys.size(); i++){
-            rebalancePut(r, sortedKeys.get(i), sortedValues.get(i), comparator, depthCounter);
+            r = rebalancePut(r, sortedKeys.get(i), sortedValues.get(i), comparator, depthCounter);
         }
     }
 
@@ -166,20 +167,21 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
         rebalanceTraversal(unsortedKeys, unsortedValues, currentNode.right);
     }
 
-    public void rebalanceTraversalDelete(Node currentNode){
+    public Node rebalanceTraversalDelete(Node currentNode){
         if(currentNode == null){
-            return;
+            return currentNode;
         }
-        Node l = currentNode.left;
-        Node r = currentNode.right;
-        rebalanceTraversalDelete(l);
-        currentNode = null;
-        rebalanceTraversalDelete(r);
+        // Node l = currentNode.left;
+        // Node r = currentNode.right;
+        rebalanceTraversalDelete(currentNode.left);
+        // currentNode = null;
+        rebalanceTraversalDelete(currentNode.right);
+       return null;
     }
 
 
-    public void rebalancePut(Node r, Key key, Value val, Comparator<Key> comparator, int depthCounter){
-        r = rebalancePutHelper(r, key, val, comparator, depthCounter);
+    public Node rebalancePut(Node r, Key key, Value val, Comparator<Key> comparator, int depthCounter){
+        return rebalancePutHelper(r, key, val, comparator, depthCounter);
     }
 
     public Node rebalancePutHelper(Node r, Key key, Value val, Comparator<Key> comparator, int depthCounter){
@@ -311,7 +313,7 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
                 Node minSubtreeNode =  getMinKeyNodeInRightSubtree(r);
                 r.key = minSubtreeNode.key;
                 r.val = minSubtreeNode.val;
-                System.out.println(r.key);
+                // System.out.println(r.key);
                 r.right = deleteHelper(r.right, r.key, comparator);
                 return r;
             }
