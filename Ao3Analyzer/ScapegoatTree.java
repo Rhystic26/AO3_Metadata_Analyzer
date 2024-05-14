@@ -76,6 +76,9 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
             // System.out.println ("Actually inserting key " + key);
             r = new Node(key, val, null, null, 1, depthCounter);
             this.size += 1;
+            if(this.size > this.maxSize){
+                this.maxSize = this.size;
+            }
           
             if(depthCounter > maxDepth){
                 this.maxDepth = depthCounter;
@@ -125,6 +128,7 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
     // Rebalances tree using scapegoat node selected in put function as root
     public void rebalance(Node r, Comparator<Key> comparator, int depthCounter){
         // Makes a pseudo-hashtable of all key-value pairs in the scapegoat's subtree, sorted by key values
+        // System.out.println("Rebalancing");
         ArrayList<Key> unsortedKeys = new ArrayList<Key>();
         ArrayList<Value> unsortedValues = new ArrayList<Value>();
         rebalanceTraversal(unsortedKeys, unsortedValues, r);
@@ -185,7 +189,9 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
             // System.out.println("rebalancePut inserting key " + key);
             r = new Node(key, val, null, null, 1, depthCounter);
             this.size += 1;
-          
+            if(this.size > this.maxSize){
+                this.maxSize = this.size;
+            }
             if(depthCounter > maxDepth){
                 this.maxDepth = depthCounter;
             }
@@ -265,8 +271,70 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
 	 * The comparator is used to compare keys
 	 */
     public void delete(Key key, Comparator<Key> comparator){
-        // TODO
-        System.out.println("Not implemented yet");
+        if(contains(key, comparator) == false){
+            System.out.println("Key not in tree");
+            return;
+        }
+        root = deleteHelper(root, key, comparator);
+    }
+
+    public Node deleteHelper(Node r, Key key, Comparator<Key> comparator){
+        if(r == null){
+            return r;
+        }
+
+        if(comparator.compare(key, r.key) < 0){
+            r.left = deleteHelper(r.left, key, comparator);
+        }
+        
+        if(comparator.compare(key, r.key) > 0){
+            r.right = deleteHelper(r.right, key, comparator);
+        }
+
+        if(comparator.compare(key, r.key) == 0){
+            if(r.left == null && r.right == null){
+                r = null;
+                return r;
+            }
+
+            if(r.left == null){
+                r = r.right;
+                return r;
+            }
+
+            if(r.right == null){
+                r = r.left;
+                return r;
+            }
+
+            if(r.left != null && r.right != null){
+                Node minSubtreeNode =  getMinKeyNodeInRightSubtree(r);
+                r.key = minSubtreeNode.key;
+                r.val = minSubtreeNode.val;
+                System.out.println(r.key);
+                r.right = deleteHelper(r.right, r.key, comparator);
+                return r;
+            }
+        }
+        return r;
+    }
+
+    // Returns the node with the smallest key in a given tree
+    public Node getMinKeyNodeInRightSubtree(Node root){
+
+        return getMinKeyNodeInRightSubtreeHelper(root.right);
+    }
+
+    public Node getMinKeyNodeInRightSubtreeHelper(Node root){
+        if(root.left == null){
+            return root;
+        }
+        
+        return getMinKeyNodeInRightSubtreeHelper(root.left);
+    }
+
+    public Node removeNodeExcludeRoot(Node root, Key key, Comparator<Key> comparator){
+        return deleteHelper(root.right, key, comparator);
     }
 
     public ArrayList<Key> inOrderTraversalKeys(int n){
@@ -301,10 +369,16 @@ public class ScapegoatTree<Key, Value> implements SymbolTable<Key, Value>{
     public static void main(String[] args) {
         ScapegoatTree<Integer, String> sgt = new ScapegoatTree<Integer, String>(0.5);
         IntComparator ic = new IntComparator();
-        sgt.put(4, "d", ic);
+        sgt.put(6, "f", ic);
         sgt.put(1, "a", ic);
-        sgt.put(5, "e", ic);
+        sgt.put(4, "d", ic);
         sgt.put(2, "b", ic);
-
+        sgt.put(3, "c", ic);
+        sgt.put(5, "e", ic);
+        System.out.println(sgt.root.key);
+        sgt.delete(4, ic);
+        System.out.println((sgt.inOrderTraversalKeys(5)).toString());
+        String ans = sgt.get(1, ic);
+        System.out.println(ans);
     }
 }

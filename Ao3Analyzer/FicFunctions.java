@@ -221,6 +221,7 @@ public class FicFunctions {
 			System.out.println("\t  [2] - Get metadata for a specific tag");
 			System.out.println("\t  [3] - Get most popular fics for a specific tag");
 			System.out.println("\t  [4] - Get most popular tags for this data");
+			System.out.println("\t  [5] - Delete all fics with a specific tag");
 			System.out.println("\t  [q] - Quit");
 			System.out.print("> ");
 
@@ -236,6 +237,9 @@ public class FicFunctions {
 					break;
 				case "4":
 					getPopTags(in, f);
+					break;
+				case "5":
+					deleteTag(in, f);
 					break;
 				case "q":
 					running = false;
@@ -276,6 +280,23 @@ public class FicFunctions {
 			System.out.println("most popular fic: " + 
 					f.tree.get(tagTree.inOrderTraversalValues(1).get(0).id, new IntComparator()).title);
 		} else System.out.println("Not a valid tag!");
+	}
+	private static void deleteTag(Scanner in, FicFunctions f){
+		// Finish
+		IntComparator ic = new IntComparator();
+		System.out.println("Enter a tag to delete:");
+		String input = in.nextLine();
+		ScapegoatTree<Integer, Fic> tagTree = null;
+		tagTree = f.tags.get(input);
+		if(tagTree == null){
+			System.out.println("Not a valid tag!");
+			return;
+		}
+		ArrayList<Integer> tagKeys = tagTree.inOrderTraversalKeys(tagTree.size());
+		for(int i=0; i<tagKeys.size(); i++){
+			f.tree.delete(tagKeys.get(i), ic);
+		}
+		System.out.println("Tag '" + input + "' deleted.");
 	}
 	private static void getPopFics(Scanner in, FicFunctions f) {
 		System.out.println("Enter a tag to search for\n(Leave blank for all tags):");
