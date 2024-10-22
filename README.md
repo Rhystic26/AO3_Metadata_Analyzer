@@ -1,4 +1,4 @@
-# Ao3_Metadata_Analyzer
+# Ao3 Metadata Analyzer
 A program to analyze tag density and fanfiction metadata from Archive of Our Own.
 
 ## Overview
