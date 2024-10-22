@@ -1,4 +1,4 @@
-# csci-136-final-project-jacob-alex
+# Ao3_Metadata_Analyzer
 A program to analyze tag density and fanfiction metadata from Archive of Our Own.
 
 ## Overview
