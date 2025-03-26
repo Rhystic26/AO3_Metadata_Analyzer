@@ -1,5 +1,5 @@
 # AO3 Metadata Analyzer
-A program to analyze tag density and fanfiction metadata from Archive of Our Own. Made by Rhystic26 and jan-panoski.
+A program to analyze tag density and fanfiction metadata from Archive of Our Own. Made by Rhystic26 and jan-Pansoki.
 
 ## Overview
 This package is a command-line tool that can perform analysis on CSV files of Archive of Our Own (Ao3) metadata. The package comes bundled with a starter dataset (every General Audiences-rated fanfiction under the 'Chess' tag), but if you want to create your own dataset check out this fantastic project by radiolarian: https://github.com/radiolarian/AO3Scraper.
